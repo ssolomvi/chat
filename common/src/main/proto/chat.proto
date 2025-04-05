@@ -1,0 +1,131 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+option java_package = "ru.mai.chat.common";
+
+package chat;
+
+/*  -------------------------------- SERVICES -------------------------------- */
+service ChatService {
+
+    rpc Hello(HelloRequest) returns (HelloResponse);
+
+    rpc SignUp(SignUpRequest) returns (EmptyMessage);
+
+    rpc Disconnect(DisconnectRequest) returns (EmptyMessage);
+
+    rpc ChatroomCreate(ChatRoomCreateRequest) returns (ChatroomInfo);
+
+    rpc SendMessage(SendMessageRequest) returns (EmptyMessage);
+
+    rpc RestoreChatrooms(RestoreMessagesRequest) returns (RestoreChatroomsResponse);
+
+    rpc RestoreMessages(RestoreMessagesRequest) returns (EmptyMessage);
+
+}
+
+/*  -------------------------------- EXCEPTION -------------------------------- */
+enum ChatServiceErrorCode {
+    ILLEGAL_ARGUMENT_CODE_VALUE = 0;
+    NOT_FOUND_CODE_VALUE = 1;
+    SQL_EXCEPTION = 2;
+    KAFKA_EXCEPTION = 3;
+}
+
+message ChatServiceExceptionResponse {
+  google.protobuf.Timestamp timestamp = 1;
+  ChatServiceErrorCode error_code = 2;
+}
+
+/*  -------------------------------- MESSAGES -------------------------------- */
+enum Status {
+  OK = 0;
+  ERROR = 1;
+}
+
+enum AlgorithmEnum {
+    RIJNDAEL = 0;
+    MARS = 1;
+    RC6 = 2;
+    LOKI97 = 3;
+    DES = 4;
+    DEAL = 5;
+}
+
+enum EncryptionModeEnum {
+    ECB = 0;
+    CBC = 1;
+    PCBC = 2;
+    OFB = 3;
+    CFB = 4;
+    COUNTER = 5;
+    RANDOM_DELTA = 6;
+}
+
+enum PaddingModeEnum {
+    ZEROES = 0;
+    ANSI_X_923 = 1;
+    PKCS7 = 2;
+    ISO10126 = 3;
+}
+
+message HelloRequest {
+    string login = 1;
+}
+
+message SignUpRequest {
+    string login = 1;
+    string publicKey = 2;
+}
+
+message HelloResponse {
+    int64 id = 1;
+    string p = 2;
+    string g = 3;
+}
+
+message DisconnectRequest {
+    int64 id = 1;
+}
+
+message EmptyMessage {
+}
+
+message ChatRoomCreateRequest {
+    int64 id = 1;
+    string companionLogin = 2;
+    AlgorithmEnum algorithm = 3;
+    EncryptionModeEnum encryptionMode = 4;
+    PaddingModeEnum paddingMode = 5;
+}
+
+message ChatroomInfo {
+    int64 chatRoomId = 1;
+    string companion_pk = 2;
+    AlgorithmEnum algorithm = 3;
+    EncryptionModeEnum encryptionMode = 4;
+    PaddingModeEnum paddingMode = 5;
+}
+
+message Message {
+  string filename = 1;
+  bytes text = 2;
+  int32 filePartNumber = 3;
+  int32 filePartCount = 4;
+}
+
+message SendMessageRequest {
+    int64 id = 1;
+    int64 chatRoomId = 2;
+    Message message = 3;
+}
+
+message RestoreMessagesRequest {
+    int64 id = 1;
+}
+
+message RestoreChatroomsResponse {
+    repeated ChatroomInfo chatrooms = 1;
+}
