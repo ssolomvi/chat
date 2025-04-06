@@ -12,7 +12,7 @@ service ChatService {
 
     rpc Hello(HelloRequest) returns (HelloResponse);
 
-    rpc SignUp(SignUpRequest) returns (EmptyMessage);
+    rpc SignUp(SignUpRequest) returns (SignUpResponse);
 
     rpc Disconnect(DisconnectRequest) returns (EmptyMessage);
 
@@ -78,6 +78,10 @@ message HelloRequest {
 message SignUpRequest {
     string login = 1;
     string publicKey = 2;
+}
+
+message SignUpResponse {
+    int64 id = 1;
 }
 
 message HelloResponse {

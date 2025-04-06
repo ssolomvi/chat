@@ -10,6 +10,13 @@ spring:
   mustache:
     check-template-location: false
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: default
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonSerializer
+
   # PostgreSQL configuration.
 #  datasource:
 #    url: jdbc:postgresql://localhost:5432/chat
